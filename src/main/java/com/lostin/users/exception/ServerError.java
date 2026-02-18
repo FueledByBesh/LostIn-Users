@@ -1,10 +1,8 @@
 package com.lostin.users.exception;
 
 import com.lostin.users.request_response.ErrorResponse;
-import lombok.experimental.SuperBuilder;
 
-@SuperBuilder
-public abstract class ServerError extends RuntimeException {
+public class ServerError extends RuntimeException {
     String error;
     String message;
 

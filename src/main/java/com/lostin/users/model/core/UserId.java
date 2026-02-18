@@ -1,30 +1,37 @@
 package com.lostin.users.model.core;
 
 import com.lostin.users.exception.ValidationException;
+import com.lostin.users.util.JakartaValidator;
+import com.lostin.users.util.abstracts.Validatable;
 import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
 public record UserId(
         @NotNull(message = "ID cannot be null")
         UUID value
-) {
-    private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    private static final Validator validator = factory.getValidator();
+) implements Validatable {
 
-    public UserId {
-        Set<ConstraintViolation<UserId>> violations = validator.validate(this);
+    @Override
+    public void validate() throws ValidationException {
+        this.getViolations().ifPresent(e->{
+            throw new ValidationException("Validation error",e);
+        });
+    }
+
+    @Override
+    public Optional<String> getViolations() {
+        Set<ConstraintViolation<UserId>> violations = JakartaValidator.validator.validate(this);
         if (!violations.isEmpty()) {
             StringBuilder sb = new StringBuilder();
             for (ConstraintViolation<UserId> violation : violations) {
                 sb.append(violation.getMessage()).append("; ");
             }
-            throw new ValidationException("USER_ID_VALIDATION_ERROR", sb.toString());
+            return Optional.of(sb.toString());
         }
+        return Optional.empty();
     }
 }

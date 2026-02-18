@@ -1,29 +1,37 @@
 package com.lostin.users.model.core;
 
 import com.lostin.users.exception.ValidationException;
+import com.lostin.users.util.JakartaValidator;
+import com.lostin.users.util.abstracts.Validatable;
 import jakarta.validation.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
+import java.util.Optional;
 import java.util.Set;
 
 public record Email(
-        @NotNull(message = "Email cannot be null")
-        @NotBlank(message = "Email cannot be blank")
+        @NotBlank(message = "Email is required")
         @jakarta.validation.constraints.Email(message = "Email is not valid")
         String value
-) {
-    private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    private static final Validator validator = factory.getValidator();
+) implements Validatable {
 
-    public Email{
-        Set<ConstraintViolation<Email>> violations = validator.validate(this);
+    @Override
+    public void validate() throws ValidationException {
+        this.getViolations().ifPresent(e -> {
+            throw new ValidationException("Validation Error",e);
+        });
+    }
+
+    @Override
+    public Optional<String> getViolations() {
+        Set<ConstraintViolation<Email>> violations = JakartaValidator.validator.validate(this);
         if (!violations.isEmpty()) {
             StringBuilder sb = new StringBuilder();
             for (ConstraintViolation<Email> violation : violations) {
                 sb.append(violation.getMessage()).append("; ");
             }
-            throw new ValidationException("EMAIL_VALIDATION_ERROR",sb.toString());
+            return Optional.of(sb.toString());
         }
+        return Optional.empty();
     }
 }

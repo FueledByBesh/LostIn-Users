@@ -18,8 +18,23 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<@NonNull ErrorResponse> handleValidationException(MethodArgumentNotValidException e){
-        return ResponseEntity.badRequest().body(new ErrorResponse("VALIDATION_ERROR",e.getMessage()));
+    public ResponseEntity<@NonNull ErrorResponse> handleValidation(
+            MethodArgumentNotValidException ex
+    ) {
+
+        String message = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(err -> err.getField() + ": " + err.getDefaultMessage())
+                .findFirst()
+                .orElse("Validation error");
+
+        return ResponseEntity.badRequest().body(new ErrorResponse("VALIDATION_ERROR",message));
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<@NonNull ErrorResponse> handleBadRequest(BadRequestException e){
+        return ResponseEntity.badRequest().body(e.toErrorResponse());
     }
 
     @ExceptionHandler(ServerError.class)

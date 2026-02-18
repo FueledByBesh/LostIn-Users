@@ -14,7 +14,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-@Profile("jpa")
 @RequiredArgsConstructor
 public class UserRepoJpaImpl implements UserRepository {
 
