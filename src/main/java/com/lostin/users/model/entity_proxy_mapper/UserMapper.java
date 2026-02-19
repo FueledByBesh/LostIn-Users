@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 @Slf4j
 @RequiredArgsConstructor
@@ -28,9 +30,9 @@ public class UserMapper {
 
     public UserEntity toEntity(UserProxy proxy){
         return UserEntity.builder()
-                .id(proxy.getUserId().value())
-                .email(proxy.getEmail().value())
-                .username(proxy.getUsername().value())
+                .id((proxy.getUserId()!=null)?proxy.getUserId().value():null)
+                .email((Objects.nonNull(proxy.getEmail()))?proxy.getEmail().value():null)
+                .username(Objects.nonNull(proxy.getUsername())?proxy.getUsername().value():null)
                 .build();
     }
 

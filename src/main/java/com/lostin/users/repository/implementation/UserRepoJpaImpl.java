@@ -5,21 +5,20 @@ import com.lostin.users.model.entity.UserEntity;
 import com.lostin.users.model.entity_proxy_mapper.UserMapper;
 import com.lostin.users.model.proxy.UserProxy;
 import com.lostin.users.repository.UserRepository;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
-import org.springframework.context.annotation.Profile;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
+@Qualifier("jpa-impl")
 @RequiredArgsConstructor
 public class UserRepoJpaImpl implements UserRepository {
 
     private final UserJpaRepository repo;
     private final UserMapper mapper;
-    private final EntityManager entityManager;
 
     @Override
     public Optional<UserProxy> findUserById(@NonNull UserId userId) {

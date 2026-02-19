@@ -1,11 +1,9 @@
 package com.lostin.users.request_response;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import com.lostin.users.util.validation.annotation.ValidEmail;
 
 public record FindByEmailRequest(
-        @NotBlank
-        @Email
+        @ValidEmail
         String email
 ) {
 }

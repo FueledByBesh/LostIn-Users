@@ -1,17 +1,17 @@
 package com.lostin.users.service;
 
+import com.lostin.users.exception.ConflictException;
 import com.lostin.users.exception.ServiceResponseException;
-import com.lostin.users.exception.ValidationException;
 import com.lostin.users.model.proxy.UserProxy;
 import com.lostin.users.model.core.*;
 import com.lostin.users.repository.UserRepository;
-import com.lostin.users.request_response.BasicCreateUserRequest;
-import com.lostin.users.request_response.BasicCreateUserResponse;
 import com.lostin.users.request_response.FindByEmailRequest;
 import com.lostin.users.request_response.GetUserIdResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -23,12 +23,9 @@ public class UserManagementService {
     /**
      * Creates a user; returns user id if successful
      */
-    public BasicCreateUserResponse basicUserCreation(BasicCreateUserRequest request) {
-        Email email = new Email(request.email());
-        Username username = new Username(request.username());
-
+    public UUID basicUserCreation(Email email, Username username) {
         if (userRepository.isEmailTaken(email)) {
-            throw new ServiceResponseException(409, "EMAIL_TAKEN", "Email is already registered, please try another one!");
+            throw new ConflictException("EMAIL_TAKEN","Email is already registered, please try another one!");
         }
 
         UserProxy user = UserProxy.builder()
@@ -37,7 +34,7 @@ public class UserManagementService {
                 .build();
 
         UserProxy proxy = userRepository.saveAndFlush(user);
-        return new BasicCreateUserResponse(proxy.getUserId().value());
+        return proxy.getUserId().value();
     }
 
 
@@ -51,8 +48,8 @@ public class UserManagementService {
         return new GetUserIdResponse(id.value());
     }
 
-    public boolean isEmailTaken(FindByEmailRequest request) {
-        return userRepository.isEmailTaken(new Email(request.email()));
+    public boolean isEmailTaken(Email email) {
+        return userRepository.isEmailTaken(email);
     }
 
 

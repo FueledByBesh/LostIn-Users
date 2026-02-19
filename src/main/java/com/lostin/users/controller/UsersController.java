@@ -1,6 +1,8 @@
 package com.lostin.users.controller;
 
 
+import com.lostin.users.model.core.Email;
+import com.lostin.users.model.core.Username;
 import com.lostin.users.request_response.*;
 import com.lostin.users.service.UserManagementService;
 import jakarta.validation.Valid;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
 
 
 /*
@@ -30,18 +34,21 @@ public class UsersController {
     protected ResponseEntity<@NonNull BasicCreateUserResponse> createUser(
             @Valid @RequestBody BasicCreateUserRequest request
     ) {
-        var response = userManagementService.basicUserCreation(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        UUID userId = userManagementService.basicUserCreation(
+                new Email(request.email()),
+                new Username(request.username())
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(new BasicCreateUserResponse(userId));
     }
 
     /*
      Always returns 200 ok with body "taken": boolean(true,false)
      */
     @PostMapping("/is-email-taken")
-    protected ResponseEntity<@NonNull Boolean> isEmailRegistered(
+    protected ResponseEntity<@NonNull Boolean> isEmailTaken(
             @Valid @RequestBody FindByEmailRequest request
     ) {
-        boolean taken = userManagementService.isEmailTaken(request);
+        boolean taken = userManagementService.isEmailTaken(new Email(request.email()));
         return ResponseEntity.ok(taken);
     }
 

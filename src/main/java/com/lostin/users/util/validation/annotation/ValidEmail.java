@@ -1,15 +1,21 @@
-package com.lostin.users.util.Validation.email;
+package com.lostin.users.util.validation.annotation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = EmailValidator.class)
+@Constraint(validatedBy = {})
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
+
+@NotBlank(message = "Email is required")
+@Email(message = "Email is not valid")
 public @interface ValidEmail {
+
     String message() default "Email is not valid";
 
     Class<?>[] groups() default {};
