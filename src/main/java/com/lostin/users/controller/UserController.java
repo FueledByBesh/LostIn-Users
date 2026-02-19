@@ -5,10 +5,8 @@ import com.lostin.users.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 
 @RequiredArgsConstructor
 @RestController
@@ -17,16 +15,16 @@ public class UserController {
 
     private final UserService userService;
 
-    //todo
-    /*
-    gets User id from token
-     */
-    @GetMapping("/get-min-data")
-    protected ResponseEntity<@NonNull String> getMinData(
-
-    ) {
+    @GetMapping("/get-profile")
+    protected ResponseEntity<@NonNull String> getProfile() {
+        /*todo:
+           Gets user Id from token
+           Checks for scope
+         */
         return ResponseEntity.ok("Not Implemented Yet!");
     }
+
+
 
     //todo
     //should check for client scopes

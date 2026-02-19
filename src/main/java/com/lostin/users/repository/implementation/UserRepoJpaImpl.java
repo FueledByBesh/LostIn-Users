@@ -1,5 +1,6 @@
 package com.lostin.users.repository.implementation;
 
+import com.lostin.users.dto.user.UserProfile;
 import com.lostin.users.model.core.*;
 import com.lostin.users.model.entity.UserEntity;
 import com.lostin.users.model.entity_proxy_mapper.UserMapper;
@@ -10,6 +11,7 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -50,6 +52,16 @@ public class UserRepoJpaImpl implements UserRepository {
     @Override
     public Optional<UserId> getIdByEmail(@NonNull Email email) {
         return repo.findIdByEmail(email.value()).map(UserId::new);
+    }
+
+    @Override
+    public Optional<UserProfile> getUserProfile(@NonNull UserId userId) {
+        return repo.findById(userId.value()).map(mapper::toUserProfile);
+    }
+
+    @Override
+    public List<UserProfile> getProfiles(@NonNull List<UserId> userIds) {
+        return repo.findAllByIds(userIds.stream().map(UserId::value).toList()).stream().map(mapper::toUserProfile).toList();
     }
 
 

@@ -1,6 +1,8 @@
 package com.lostin.users.service;
 
 
+import com.lostin.users.dto.user.UserProfile;
+import com.lostin.users.exception.NotFoundException;
 import com.lostin.users.model.core.UserId;
 import com.lostin.users.model.proxy.UserProxy;
 import com.lostin.users.repository.UserRepository;
@@ -23,10 +25,18 @@ public class UserService {
         return userRepository.findUserById(new UserId(userId)).orElse(null);
     }
 
-    public UserProxy getUserOrThrow(UUID userId) {
+    public UserProxy getUserOrThrow(UUID userId) throws NotFoundException{
         return userRepository.findUserById(new UserId(userId))
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
     }
+
+    public UserProfile getMinProfile(UserId userId) throws NotFoundException {
+        return userRepository.getUserProfile(userId).orElseThrow(
+                ()-> new NotFoundException("User not found")
+        );
+    }
+
+
 
 
 }

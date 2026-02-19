@@ -1,5 +1,6 @@
 package com.lostin.users.model.entity_proxy_mapper;
 
+import com.lostin.users.dto.user.UserProfile;
 import com.lostin.users.model.core.UserId;
 import com.lostin.users.model.core.Username;
 import com.lostin.users.model.entity.UserEntity;
@@ -8,8 +9,6 @@ import com.lostin.users.model.core.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import java.util.Objects;
 
 @Component
 @Slf4j
@@ -24,15 +23,26 @@ public class UserMapper {
         return UserProxy.builder()
                 .userId(new UserId(entity.getId()))
                 .email(new Email(entity.getEmail()))
-                .username(new Username(entity.getUsername()));
+                .username(new Username(entity.getUsername()))
+                .avatarUri(entity.getAvatarUri());
     }
 
 
     public UserEntity toEntity(UserProxy proxy){
         return UserEntity.builder()
-                .id((proxy.getUserId()!=null)?proxy.getUserId().value():null)
-                .email((Objects.nonNull(proxy.getEmail()))?proxy.getEmail().value():null)
-                .username(Objects.nonNull(proxy.getUsername())?proxy.getUsername().value():null)
+                .id(proxy.getIdAsUUID())
+                .email(proxy.getEmailAsString())
+                .username(proxy.getUsernameAsString())
+                .avatarUri(proxy.getAvatarUri())
+                .build();
+    }
+
+    public UserProfile toUserProfile(UserEntity entity){
+        return UserProfile.builder()
+                .userId(new UserId(entity.getId()))
+                .username(new Username(entity.getUsername()))
+                .email(new Email(entity.getEmail()))
+                .avatarUri(entity.getAvatarUri())
                 .build();
     }
 

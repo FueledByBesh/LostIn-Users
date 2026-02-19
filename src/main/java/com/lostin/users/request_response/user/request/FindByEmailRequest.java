@@ -1,4 +1,4 @@
-package com.lostin.users.request_response;
+package com.lostin.users.request_response.user.request;
 
 import com.lostin.users.util.validation.annotation.ValidEmail;
 

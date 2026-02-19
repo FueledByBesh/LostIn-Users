@@ -1,6 +1,5 @@
 package com.lostin.users.util.validation.annotation;
 
-
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import jakarta.validation.constraints.NotNull;
@@ -10,7 +9,7 @@ import java.lang.annotation.*;
 
 @Documented
 @Constraint(validatedBy = {})
-@Target({ElementType.FIELD, ElementType.PARAMETER})
+@Target({ElementType.FIELD, ElementType.PARAMETER,ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
 
 @NotNull(message = "UUID is required")

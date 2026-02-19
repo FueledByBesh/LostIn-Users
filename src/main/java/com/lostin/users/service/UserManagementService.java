@@ -1,16 +1,19 @@
 package com.lostin.users.service;
 
+import com.lostin.users.dto.user.UserProfile;
 import com.lostin.users.exception.ConflictException;
+import com.lostin.users.exception.NotFoundException;
 import com.lostin.users.exception.ServiceResponseException;
 import com.lostin.users.model.proxy.UserProxy;
 import com.lostin.users.model.core.*;
 import com.lostin.users.repository.UserRepository;
-import com.lostin.users.request_response.FindByEmailRequest;
-import com.lostin.users.request_response.GetUserIdResponse;
+import com.lostin.users.request_response.user.request.FindByEmailRequest;
+import com.lostin.users.request_response.user.response.GetUserIdResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -19,6 +22,7 @@ import java.util.UUID;
 public class UserManagementService {
 
     private final UserRepository userRepository;
+    private final UserService userService;
 
     /**
      * Creates a user; returns user id if successful
@@ -52,5 +56,12 @@ public class UserManagementService {
         return userRepository.isEmailTaken(email);
     }
 
+    public UserProfile getMinProfile(UserId userId) throws NotFoundException {
+        return userService.getMinProfile(userId);
+    }
+
+    public List<UserProfile> getProfiles(List<UserId> userIds){
+        return userRepository.getProfiles(userIds);
+    }
 
 }
