@@ -8,11 +8,11 @@ import jakarta.validation.ConstraintViolation;
 import java.util.Set;
 
 public record Username(
+        @ValidUsername
         String value
 ) {
 
     public Username(
-            @ValidUsername
             String value
     ) {
         this.value = value;

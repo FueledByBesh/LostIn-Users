@@ -8,11 +8,12 @@ import jakarta.validation.*;
 import java.util.Set;
 
 public record Email(
+        @ValidEmail
         String value
 ) {
 
     public Email(
-            @ValidEmail String value
+            String value
     ){
         this.value = value;
         Set<ConstraintViolation<Email>> violations = JakartaValidator.validator.validate(this);

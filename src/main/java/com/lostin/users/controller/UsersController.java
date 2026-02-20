@@ -11,7 +11,6 @@ import com.lostin.users.request_response.user.request.GetUserProfileRequest;
 import com.lostin.users.request_response.user.request.GetUserProfilesRequest;
 import com.lostin.users.request_response.user.response.*;
 import com.lostin.users.service.UserManagementService;
-import com.lostin.users.util.validation.annotation.ValidUUID;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
@@ -79,7 +78,7 @@ public class UsersController {
     protected ResponseEntity<@NonNull MinimalProfileWithIDResponse> getProfile(
             @Valid @RequestBody GetUserProfileRequest request
     ) {
-        UserProfile profile = userManagementService.getMinProfile(new UserId(request.userId()));
+        UserProfile profile = userManagementService.getMinProfile(UserId.from(request.userId()));
         return ResponseEntity.ok(MinimalProfileWithIDResponse.fromUserProfile(profile));
     }
 
@@ -87,7 +86,7 @@ public class UsersController {
     protected ResponseEntity<@NonNull List<MinimalProfileWithIDResponse>> getProfiles(
             @Valid @RequestBody GetUserProfilesRequest request
     ){
-        List<UserProfile> profiles = userManagementService.getProfiles(request.userIds().stream().map(UserId::new).toList());
+        List<UserProfile> profiles = userManagementService.getProfiles(request.userIds().stream().map(UserId::from).toList());
         return ResponseEntity.ok(profiles.stream().map(MinimalProfileWithIDResponse::fromUserProfile).toList());
     }
 
